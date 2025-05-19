@@ -1,4 +1,7 @@
+using ComplaintSystem.Data;
+using ComplaintSystem.Repositories;
 using Scalar.AspNetCore;
+using Serilog;
 
 namespace ComplaintSystem
 {
@@ -13,6 +16,17 @@ namespace ComplaintSystem
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            //Registering Services
+            builder.Services.AddSingleton<IDapperContext, DapperContext>();
+            builder.Services.AddSingleton<IDepartment, DepartmentRepo>();
+
+            //Registering Serilog
+            builder.Host.UseSerilog((context, services, configuration) =>
+                configuration.ReadFrom.Configuration(context.Configuration));
+
+
+            builder.Host.UseSerilog();
 
             var app = builder.Build();
 
