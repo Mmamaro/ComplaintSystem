@@ -34,7 +34,7 @@ namespace ComplaintSystem.Controllers
 
                 if (!isAdded)
                 {
-                    return BadRequest(new { Message = "Could not add departement" });
+                    return BadRequest(new { Message = "Could not add role" });
                 }
 
                 return Created();
@@ -107,7 +107,7 @@ namespace ComplaintSystem.Controllers
 
                 if (!isUpdated)
                 {
-                    return BadRequest(new { Message = "Could not update departemnt" });
+                    return BadRequest(new { Message = "Could not update role" });
                 }
 
                 return Ok();
@@ -136,7 +136,7 @@ namespace ComplaintSystem.Controllers
 
                 if (!isDeleted)
                 {
-                    return BadRequest(new { Message = "Could not update departemnt" });
+                    return BadRequest(new { Message = "Could not update role" });
                 }
 
                 return Ok();

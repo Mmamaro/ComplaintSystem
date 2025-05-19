@@ -21,6 +21,7 @@ namespace ComplaintSystem
             builder.Services.AddSingleton<IDapperContext, DapperContext>();
             builder.Services.AddSingleton<IDepartment, DepartmentRepo>();
             builder.Services.AddSingleton<IRole, RoleRepo>();
+            builder.Services.AddSingleton<IStatus, StatusRepo>();
 
             //Registering Serilog
             builder.Host.UseSerilog((context, services, configuration) =>
