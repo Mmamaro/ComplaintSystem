@@ -1,11 +1,13 @@
 ﻿using ComplaintSystem.Models;
 using ComplaintSystem.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
 namespace ComplaintSystem.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Route("api/departments")]
     [ApiController]
     public class DepartmentController : ControllerBase
@@ -23,6 +25,7 @@ namespace ComplaintSystem.Controllers
         {
             try
             {
+
                 var department = await _departmentRepo.GetDepartmentByName(payload.Name);
 
                 if (department != null)
