@@ -41,6 +41,8 @@ namespace ComplaintSystem
             builder.Host.UseSerilog((context, services, configuration) =>
                 configuration.ReadFrom.Configuration(context.Configuration));
 
+            Log.Information("Serilog is configured and logging works!");
+
             #region [ Configure Jwt ]
             //Jwt configuration starts here
             var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
@@ -74,7 +76,9 @@ namespace ComplaintSystem
             {
                 app.MapOpenApi();
                 app.MapScalarApiReference();
+            
             }
+
 
             app.UseHttpsRedirection();
 

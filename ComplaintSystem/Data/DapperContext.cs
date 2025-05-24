@@ -10,7 +10,7 @@ namespace ComplaintSystem.Data
         Task<List<T>> Query<T>(string sql);
         Task<T> QuerySingleRecord<T>(string sql, DynamicParameters parameters);
         Task<bool> ExecuteCommand(string sql, DynamicParameters parameters);
-        Task<List<T>> QueryWithParams<T>(string sql);
+        Task<List<T>> QueryWithParams<T>(string sql, DynamicParameters parameters);
     }
 
     public class DapperContext : IDapperContext
@@ -56,13 +56,13 @@ namespace ComplaintSystem.Data
             }
         }
 
-        public async Task<List<T>> QueryWithParams<T>(string sql)
+        public async Task<List<T>> QueryWithParams<T>(string sql, DynamicParameters parameters)
         {
             try
             {
                 using IDbConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-                var data = await connection.QueryAsync<T>(sql);
+                var data = await connection.QueryAsync<T>(sql, parameters);
 
                 return data.ToList();
             }

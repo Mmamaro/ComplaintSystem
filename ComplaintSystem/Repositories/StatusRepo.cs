@@ -8,6 +8,7 @@ namespace ComplaintSystem.Repositories
     public interface IStatus
     {
         public Task<List<Status>> GetAllStatuses();
+        public Task<List<string>> GetAllStatusNames();
         public Task<Status> GetStatusById(Guid id);
         public Task<Status> GetStatusByName(string name);
         public Task<bool> DeleteStatus(Guid id);
@@ -40,7 +41,7 @@ namespace ComplaintSystem.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error in the Status Repo while trying to add a department");
+                Log.Error(ex, "Error in the Status Repo while trying to add a status");
                 throw;
             }
         }
@@ -61,7 +62,7 @@ namespace ComplaintSystem.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error in the Status Repo while trying to delete a department");
+                Log.Error(ex, "Error in the Status Repo while trying to delete a status");
                 throw;
             }
 
@@ -80,10 +81,28 @@ namespace ComplaintSystem.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error in the Status Repo while trying to get all department");
+                Log.Error(ex, "Error in the Status Repo while trying to get all statuses");
                 throw;
             }
 
+        }
+
+        public Task<List<string>> GetAllStatusNames()
+        {
+            try
+            {
+                string query = @"SELECT * FROM Statuses";
+
+                var data = await _context.Query<Status>(query);
+
+                return data;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in the Status Repo while trying to get all status names");
+                throw;
+            }
         }
 
         public async Task<Status> GetStatusById(Guid id)
@@ -103,7 +122,7 @@ namespace ComplaintSystem.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error in the Status Repo while trying to a department by id");
+                Log.Error(ex, "Error in the Status Repo while trying to a status by id");
                 throw;
             }
 
@@ -127,7 +146,7 @@ namespace ComplaintSystem.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error in the Status Repo while trying to a department by name");
+                Log.Error(ex, "Error in the Status Repo while trying to a status by name");
                 throw;
             }
 
@@ -148,7 +167,7 @@ namespace ComplaintSystem.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error in the Status Repo while trying to update a department");
+                Log.Error(ex, "Error in the Status Repo while trying to update a status");
                 throw;
             }
 
