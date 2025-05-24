@@ -1,11 +1,13 @@
 ﻿using ComplaintSystem.Models;
 using ComplaintSystem.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
 namespace ComplaintSystem.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Route("api/statuses")]
     [ApiController]
     public class StatusController : ControllerBase
