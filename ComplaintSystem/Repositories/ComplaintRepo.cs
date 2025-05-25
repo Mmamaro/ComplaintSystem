@@ -35,7 +35,7 @@ namespace ComplaintSystem.Repositories
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("ReporterId", payload.ReporterId);
-                parameters.Add("AcusedId", payload.AccusedId);
+                parameters.Add("AccusedId", payload.AccusedId);
                 parameters.Add("Complaint", payload.ComplaintDescription);
                 parameters.Add("StatusId", payload.StatusId);
                 parameters.Add("CreatedOn", payload.CreatedOn);
@@ -43,7 +43,7 @@ namespace ComplaintSystem.Repositories
 
 
                 var command = @"INSERT INTO Complaints([ReporterId],[AccusedId],[Complaint],[StatusId],[CreatedOn],[UpdatedOn])
-                                VALUS(@ReporterId,@AccusedId,@Complaint,@StatusId,@CreatedOn,@UpdatedOn)";
+                                VALUES(@ReporterId,@AccusedId,@Complaint,@StatusId,@CreatedOn,@UpdatedOn)";
 
                 return await _dbContext.ExecuteCommand(command, parameters);
 
@@ -59,7 +59,7 @@ namespace ComplaintSystem.Repositories
         {
             try
             {
-                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accussed,c.Complaint, s.Name as Status, 
+                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accused,c.Complaint as ComplaintDescription, s.Name as Status, 
                               c.ResolutionNote, c.CreatedOn, c.UpdatedOn
                               FROM Complaints as c
                               INNER JOIN Users as r ON c.ReporterId = r.Id
@@ -84,7 +84,7 @@ namespace ComplaintSystem.Repositories
                 var parameters = new DynamicParameters();
                 parameters.Add("id", id);
 
-                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accussed,c.Complaint, s.Name as Status, 
+                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accused,c.Complaint as ComplaintDescription, s.Name as Status, 
                               c.ResolutionNote, c.CreatedOn, c.UpdatedOn
                               FROM Complaints as c
                               INNER JOIN Users as r ON c.ReporterId = r.Id
@@ -111,7 +111,7 @@ namespace ComplaintSystem.Repositories
                 parameters.Add("start", payload.StartDate);
                 parameters.Add("end", payload.EndDate);
 
-                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accussed,c.Complaint, s.Name as Status, 
+                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accused,c.Complaint as ComplaintDescription, s.Name as Status, 
                               c.ResolutionNote, c.CreatedOn, c.UpdatedOn
                               FROM Complaints as c
                               INNER JOIN Users as r ON c.ReporterId = r.Id
@@ -156,7 +156,7 @@ namespace ComplaintSystem.Repositories
                 var parameters = new DynamicParameters();
                 parameters.Add("id", id);
 
-                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accussed,c.Complaint, s.Name as Status, 
+                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accused,c.Complaint as ComplaintDescription, s.Name as Status, 
                               c.ResolutionNote, c.CreatedOn, c.UpdatedOn
                               FROM Complaints as c
                               INNER JOIN Users as r ON c.ReporterId = r.Id
@@ -182,7 +182,7 @@ namespace ComplaintSystem.Repositories
                 var parameters = new DynamicParameters();
                 parameters.Add("id", id);
 
-                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accussed,c.Complaint, s.Name as Status, 
+                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accused,c.Complaint as ComplaintDescription, s.Name as Status, 
                               c.ResolutionNote, c.CreatedOn, c.UpdatedOn
                               FROM Complaints as c
                               INNER JOIN Users as r ON c.ReporterId = r.Id
@@ -208,7 +208,7 @@ namespace ComplaintSystem.Repositories
                 var parameters = new DynamicParameters();
                 parameters.Add("id", id);
 
-                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accussed,c.Complaint, s.Name as Status, 
+                var query = @"SELECT c.Id,r.Email as Reporter, a.Email as Accused,c.Complaint as ComplaintDescription, s.Name as Status, 
                               c.ResolutionNote, c.CreatedOn, c.UpdatedOn
                               FROM Complaints as c
                               INNER JOIN Users as r ON c.ReporterId = r.Id
@@ -258,7 +258,7 @@ namespace ComplaintSystem.Repositories
                 parameters.Add("accused", accused);
                 parameters.Add("Complaint", ComplaintDescription);
 
-                var command = @"UPDATE Complaints SET Accused = @accused, Complaint = @Complaint";
+                var command = @"UPDATE Complaints SET AccusedId = @accused, Complaint = @Complaint";
 
                 return await _dbContext.ExecuteCommand(command, parameters);
             }

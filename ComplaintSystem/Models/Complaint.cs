@@ -31,6 +31,9 @@ namespace ComplaintSystem.Models
         [EmailAddress]
         [Required(ErrorMessage = "Accused Email Id is Required")]
         public string Accused { get; set; }
+        //[EmailAddress]
+        //[Required(ErrorMessage = "Reporter Email Id is Required")]
+        //public string Reporter { get; set; }
 
         [Required(ErrorMessage = "StatusId is Required")]
         public Guid StatusId { get; set; }

@@ -36,6 +36,7 @@ namespace ComplaintSystem
             builder.Services.AddScoped<TokenHelper>();
             builder.Services.AddSingleton<IUser, UserRepo>();
             builder.Services.AddSingleton<IRefreshToken, RefreshTokenRepo>();
+            builder.Services.AddSingleton<IComplaint, ComplaintRepo>();
 
             //Registering Serilog
             builder.Host.UseSerilog((context, services, configuration) =>

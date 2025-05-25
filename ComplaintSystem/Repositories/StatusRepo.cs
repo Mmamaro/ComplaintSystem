@@ -87,13 +87,13 @@ namespace ComplaintSystem.Repositories
 
         }
 
-        public Task<List<string>> GetAllStatusNames()
+        public async Task<List<string>> GetAllStatusNames()
         {
             try
             {
                 string query = @"SELECT * FROM Statuses";
 
-                var data = await _context.Query<Status>(query);
+                var data = await _context.Query<string>(query);
 
                 return data;
 

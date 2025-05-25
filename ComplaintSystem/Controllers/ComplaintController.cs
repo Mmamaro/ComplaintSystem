@@ -1,5 +1,6 @@
 ﻿using ComplaintSystem.Models;
 using ComplaintSystem.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using System.Security.Claims;
 
 namespace ComplaintSystem.Controllers
 {
+    [Authorize]
     [Route("api/complaints")]
     [ApiController]
     public class ComplaintController : ControllerBase
@@ -24,6 +26,7 @@ namespace ComplaintSystem.Controllers
             _statusRepo = statusRepo;
         }
 
+        [Authorize(Roles = "admin,manager")]
         [HttpGet]
         public async Task<ActionResult> GetAllComplaints()
         {
@@ -40,7 +43,8 @@ namespace ComplaintSystem.Controllers
             }
         }
 
-        [HttpGet("filters")]
+        [Authorize(Roles = "admin,manager")]
+        [HttpPost("filters")]
         public async Task<ActionResult> GetComplaintsByFilters(ComplaintFilters payload)
         {
             try
@@ -62,6 +66,7 @@ namespace ComplaintSystem.Controllers
             }
         }
 
+        [Authorize(Roles = "admin,manager")]
         [HttpGet("departmentid")]
         public async Task<ActionResult> GetComplaintsByManagerDeptId()
         {
@@ -69,7 +74,8 @@ namespace ComplaintSystem.Controllers
             {
                 var tokenUserId = Guid.Parse(User?.FindFirstValue(ClaimTypes.Sid)!);
 
-                var data = await _complaints.GetComplaintsByManagerDeptId(tokenUserId);
+                var user = await _userRepo.GetUserById(tokenUserId);
+                var data = await _complaints.GetComplaintsByManagerDeptId(user.DepartmentId);
 
                 if (data == null)
                 {
@@ -94,13 +100,19 @@ namespace ComplaintSystem.Controllers
                 var tokenUserEmail = User?.FindFirstValue(ClaimTypes.Email)?.ToString();
 
                 var accused = await _userRepo.GetUserByEmail(payload.Accused);
+                var reporter = await _userRepo.GetUserByEmail(tokenUserEmail);
+
+                if (reporter == null)
+                {
+                    return BadRequest(new { Message = "Reporter does not exist" });
+                }
 
                 if (accused == null)
                 {
                     return BadRequest(new { Message = "Accused does not exist" });
                 }
 
-                if (tokenUserEmail == accused.Email)
+                if (reporter.Email == accused.Email)
                 {
                     return BadRequest(new { Message = "You cannot complain about yourself" });
                 }
@@ -133,12 +145,14 @@ namespace ComplaintSystem.Controllers
             }
         }
 
+        [Authorize]
         [HttpPatch("update-by-user/{id}")]
         public async Task<ActionResult> UpdateComplaint(Guid id, UserUpdateComplaint payload)
         {
             try
             {
                 var complaint = await _complaints.GetComplaintsById(id);
+                var tokenUserEmail = User?.FindFirstValue(ClaimTypes.Email)?.ToString();
 
                 if (complaint == null)
                 {
@@ -150,6 +164,11 @@ namespace ComplaintSystem.Controllers
                 if (accused == null)
                 {
                     return NotFound(new { Message = "Accused does not exist" });
+                }
+
+                if (tokenUserEmail != complaint.Reporter)
+                {
+                    return NotFound(new { Message = "UnAuthorized to update this complaint" });
                 }
 
                 var isUpdated = await _complaints.UpdateComplaint(id, accused.Id, payload.ComplaintDescription);
@@ -169,6 +188,7 @@ namespace ComplaintSystem.Controllers
             }
         }
 
+        [Authorize(Roles = "admin,manager")]
         [HttpPatch("update-by-manager/{id}")]
         public async Task<ActionResult> ManagerUpdateComplaint(Guid id, ManagerUpdateComplaint payload)
         {
